@@ -110,9 +110,9 @@ expect {
     "*]#\ " {send "\r"}
 }
 
-expect "*]#\ " {
-    send "rpm -ivh /tmp/libtool-ltdl-2.4.2-20.el7.x86_64.rpm /tmp/unixODBC-2.3.1-10.el7.x86_64.rpm /tmp/zabbix-agent-3.0.1-1.el7.x86_64.rpm\r"
-}
+expect "*]#\ " {send "rpm -ivh /tmp/libtool-ltdl-2.4.2-20.el7.x86_64.rpm\r"}
+expect "*]#\ " {send "rpm -ivh /tmp/unixODBC-2.3.1-10.el7.x86_64.rpm\r"}
+expect "*]#\ " {send "rpm -ivh /tmp/zabbix-agent-3.0.1-1.el7.x86_64.rpm\r"}
 
 expect "*]#\ " {
     send "sed -i '/^Server=/s/.*/Server=$Proxy/g' /etc/zabbix/zabbix_agentd.conf\r"
