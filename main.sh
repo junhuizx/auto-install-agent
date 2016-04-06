@@ -78,6 +78,7 @@ expect {
 }
 
 expect "*]#\ " { send "mkdir -p /opt/zabbix\r"}
+expect "*]#\ " { send "mkdir -p /tmp\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/compute_ping.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/ceph-status.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/compute_discovery.sh /opt/zabbix\r"}
@@ -184,11 +185,15 @@ expect {
 }
 
 expect "*]#\ " {send "rpm -ivh /tmp/python-pip-7.1.0-1.el7.noarch.rpm\r"}
-expect "*]#\ " {send "pip install pymongo\r"}
-expect "*]#\ " {send "cp /tmp/instance_monitor.py /lib/python2.7/site-packages/nova/compute/instance_monitor.py\r"}
-expect "*]#\ " {send "cp /tmp/alarm.py /lib/python2.7/site-packages/nova/compute/alarm.py\r"}
-expect "*]#\ " {send "cp /tmp/instance_monitor.service /lib/systemd/system/instance_monitor.service\r"}
-expect "*]#\ " {send "cp /tmp/instance_monitor.conf /etc/instance_monitor.conf\r"}
+expect "*]#\ " {send "pip install /tmp/pymongo-3.2.2.tar.gz\r"}
+expect "*]#\ " { send "\r"}
+expect "*]#\ " { send "\r"}
+
+expect "*]#\ " {send "\\\\cp /tmp/instance_monitor.py /lib/python2.7/site-packages/nova/compute/instance_monitor.py\r"}
+expect "*]#\ " {send "\\\\cp /tmp/alarm.py /lib/python2.7/site-packages/nova/compute/alarm.py\r"}
+expect "*]#\ " {send "\\\\cp /tmp/instance_monitor.service /lib/systemd/system/instance_monitor.service\r"}
+expect "*]#\ " {send "\\\\cp /tmp/instance_monitor.conf /etc/instance_monitor.conf\r"}
+
 expect "*]#\ " {send "systemctl enable instance_monitor;systemctl start instance_monitor\r"}
 expect "*]#\ " {send "exit\r"}
 
@@ -210,6 +215,7 @@ fi
 echo '#########################################################'
 echo '将会在下面机器安装Zabbix Agent'
 echo ${hostsup[@]}
+echo "以上Zabbix Proxy将指向$Proxy"
 echo '#########################################################'
 echo ''
 
@@ -226,17 +232,28 @@ config_instance_config $Proxy
 
 for host in ${hostsup[@]}
 do
+    echo ''
+    echo '#########################################################'
+    echo "Starting Installtion On $host"
+    echo '#########################################################'
+    echo ''
+    echo 'Install Zabbix Agent'
     # Install Zabbix Agent
     copy_packages $host
     install_zabbix_agent $host
 
+    echo 'Configure Zabbix Agent'
     # Copy Zabbix Config
     copy_userparameter_and_shell $host
     install_userparameter_and_shell $host
-
-    # Install Install Agent
+    
+    echo 'Install and Configure Instance Proxy'
+    # Install Instance Proxy
     copy_instance_proxy $host
     install_instance_proxy $host
+
+    echo "End Installtion On $host"
+
 done
 
 reset_instance_config $Proxy
