@@ -78,10 +78,18 @@ expect {
 }
 
 expect "*]#\ " { send "mkdir -p /opt/zabbix\r"}
-expect "*]#\ " { send "cp /tmp/compute_ping.sh /opt/zabbix\r"}
-expect "*]#\ " { send "cp /tmp/ceph-status.sh /opt/zabbix\r"}
-expect "*]#\ " { send "cp /tmp/compute_discovery.sh /opt/zabbix\r"}
-expect "*]#\ " { send "cp /tmp/compute_ping.sh /opt/zabbix\r"}
+expect "*]#\ " { send "\\\\cp -f /tmp/compute_ping.sh /opt/zabbix\r"}
+expect "*]#\ " { send "\\\\cp -f /tmp/ceph-status.sh /opt/zabbix\r"}
+expect "*]#\ " { send "\\\\cp -f /tmp/compute_discovery.sh /opt/zabbix\r"}
+expect "*]#\ " { send "\\\\cp -f /tmp/querydisks.pl /opt/zabbix\r"}
+expect "*]#\ " { send "chown -R zabbix:zabbix /opt/zabbix\r"}
+expect "*]#\ " { send "chmod +x /opt/zabbix/*\r"}
+
+expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_ceph.conf /etc/zabbix/zabbix_agentd.d\r" }
+expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_haproxy.conf /etc/zabbix/zabbix_agentd.d\r" }
+expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_openstack.conf /etc/zabbix/zabbix_agentd.d\r" }
+expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_disk_io.conf /etc/zabbix/zabbix_agentd.d\r" }
+expect "*]#\ " { send "systemctl restart zabbix-agent.service\r" }
 
 expect "*]#\ " {send "exit\r"}
 
@@ -227,8 +235,8 @@ do
     install_userparameter_and_shell $host
 
     # Install Install Agent
-    # copy_instance_proxy $host
-    # install_instance_proxy $host
+    copy_instance_proxy $host
+    install_instance_proxy $host
 done
 
 reset_instance_config $Proxy
