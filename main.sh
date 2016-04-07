@@ -134,6 +134,8 @@ expect "*]#\ " {send "echo 'AllowRoot=1' >> /etc/zabbix/zabbix_agentd.conf\r"}
 
 expect "*]#\ " {send "echo 'User=root' >> /etc/zabbix/zabbix_agentd.conf\r"}
 
+expect "*]#\ " {send "echo 'Timeout=15' >> /etc/zabbix/zabbix_agentd.conf\r"}
+
 expect "*]#\ " {
     send "sed -i '/^SELINUX=/s/.*/SELINUX=disabled/g' /etc/selinux/config\r"
 }
