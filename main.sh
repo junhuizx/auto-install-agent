@@ -84,6 +84,7 @@ expect "*]#\ " { send "\\\\cp -f /tmp/ceph-status.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/compute_discovery.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/querydisks.pl /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/osd_discovery.sh /opt/zabbix\r"}
+expect "*]#\ " { send "\\\\cp -f /tmp/ceph_osd.sh /opt/zabbix\r"}
 expect "*]#\ " { send "chown -R zabbix:zabbix /opt/zabbix\r"}
 expect "*]#\ " { send "chmod +x /opt/zabbix/*\r"}
 
