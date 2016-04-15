@@ -83,6 +83,7 @@ expect "*]#\ " { send "\\\\cp -f /tmp/compute_ping.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/ceph-status.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/compute_discovery.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/querydisks.pl /opt/zabbix\r"}
+expect "*]#\ " { send "\\\\cp -f /tmp/osd_discovery.sh /opt/zabbix\r"}
 expect "*]#\ " { send "chown -R zabbix:zabbix /opt/zabbix\r"}
 expect "*]#\ " { send "chmod +x /opt/zabbix/*\r"}
 
@@ -90,6 +91,8 @@ expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_ceph.conf /etc/zabbix/zabbix
 expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_haproxy.conf /etc/zabbix/zabbix_agentd.d\r" }
 expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_openstack.conf /etc/zabbix/zabbix_agentd.d\r" }
 expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_disk_io.conf /etc/zabbix/zabbix_agentd.d\r" }
+expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_rabbitmq.conf /etc/zabbix/zabbix_agentd.d\r" }
+expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_mysql.conf /etc/zabbix/zabbix_agentd.d\r" }
 expect "*]#\ " { send "systemctl restart zabbix-agent.service\r" }
 
 expect "*]#\ " {send "exit\r"}
@@ -126,6 +129,10 @@ expect "*]#\ " {
 expect "*]#\ " {
     send "sed -i '/^Hostname=/s/.*/Hostname=$host/g' /etc/zabbix/zabbix_agentd.conf\r"
 }
+
+expect "*]#\ " {send "echo 'AllowRoot=1' >> /etc/zabbix/zabbix_agentd.conf\r"}
+
+expect "*]#\ " {send "echo 'User=root' >> /etc/zabbix/zabbix_agentd.conf\r"}
 
 expect "*]#\ " {
     send "sed -i '/^SELINUX=/s/.*/SELINUX=disabled/g' /etc/selinux/config\r"
