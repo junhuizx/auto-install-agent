@@ -256,8 +256,8 @@ do
     
     echo 'Install and Configure Instance Proxy'
     # Install Instance Proxy
-    copy_instance_proxy $host
-    install_instance_proxy $host
+    # copy_instance_proxy $host
+    # install_instance_proxy $host
 
     echo "End Installtion On $host"
 
