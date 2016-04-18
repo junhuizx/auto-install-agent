@@ -1,6 +1,6 @@
 #!/bin/bash
 
-uuids=(`virsh -c qemu:///system list --uuid 2>/dev/null`)
+uuids=(`virsh -c qemu:///system list --uuid --all 2>/dev/null`)
 length=${#uuids[@]}
 
 printf "{\n"

@@ -3,11 +3,23 @@
 virsh="virsh -c qemu:///system"
 
 function check_exist(){
-    echo `$virsh list --uuid | grep -c $1`
+    exist=`$virsh list --all --uuid | grep -c $1`
+    if [ "$exist" = "1" ];then
+        state=`$virsh domstate $1`
+        if [ "$state" != 'running' ];then
+            echo '2'
+        else
+            echo '1'
+        fi 
+    else
+        echo '0'
+    fi 
+
 }
 
+
 function instance_status(){
-    if [ `check_exist $1` = "1" ];then
+    if [ `check_exist $1` = "1" -o `check_exist $1` = "2" ];then
         echo `$virsh domstate $1`
     else
         echo 'deleted'
@@ -23,7 +35,7 @@ function get_interface(){
 }
 
 function instance_disk_write(){
-    if [ `check_exist $1` = "0" ];then
+    if [ `check_exist $1` != "1" ];then
         echo '0'
 	return
     fi
@@ -38,7 +50,7 @@ function instance_disk_write(){
 }
 
 function instance_disk_read(){
-    if [ `check_exist $1` = "0" ];then
+    if [ `check_exist $1` != "1" ];then
         echo '0'
 	return
     fi
@@ -53,7 +65,7 @@ function instance_disk_read(){
 }
 
 function instance_interface_read(){
-    if [ `check_exist $1` = "0" ];then
+    if [ `check_exist $1` != "1" ];then
         echo '0'
 	return
     fi
@@ -68,7 +80,7 @@ function instance_interface_read(){
 }
 
 function instance_interface_write(){
-    if [ `check_exist $1` = "0" ];then
+    if [ `check_exist $1` != "1" ];then
         echo '0'
 	return
     fi
