@@ -85,6 +85,8 @@ expect "*]#\ " { send "\\\\cp -f /tmp/compute_discovery.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/querydisks.pl /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/osd_discovery.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/ceph_osd.sh /opt/zabbix\r"}
+expect "*]#\ " { send "\\\\cp -f /tmp/instance_discovery.sh /opt/zabbix\r"}
+expect "*]#\ " { send "\\\\cp -f /tmp/instance_operation.sh /opt/zabbix\r"}
 expect "*]#\ " { send "chown -R zabbix:zabbix /opt/zabbix\r"}
 expect "*]#\ " { send "chmod +x /opt/zabbix/*\r"}
 
@@ -94,7 +96,10 @@ expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_openstack.conf /etc/zabbix/z
 expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_disk_io.conf /etc/zabbix/zabbix_agentd.d\r" }
 expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_rabbitmq.conf /etc/zabbix/zabbix_agentd.d\r" }
 expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_mysql.conf /etc/zabbix/zabbix_agentd.d\r" }
+expect "*]#\ " { send "\\\\cp -f /tmp/userparameter_libvirt.conf /etc/zabbix/zabbix_agentd.d\r" }
 expect "*]#\ " { send "systemctl restart zabbix-agent.service\r" }
+
+expect "*]#\ " { send "\\\\cp -f /tmp/50-zabbix.rules /etc/polkit-1/rules.d\r" }
 
 expect "*]#\ " {send "exit\r"}
 
@@ -129,6 +134,10 @@ expect "*]#\ " {
 
 expect "*]#\ " {
     send "sed -i '/^Hostname=/s/.*/Hostname=$host/g' /etc/zabbix/zabbix_agentd.conf\r"
+}
+
+expect "*]#\ " {
+    send "sed -i -e '/^AllowRoot=1/d' -e '/^User=root/d' /etc/zabbix/zabbix_agentd.conf\r"
 }
 
 expect "*]#\ " {
