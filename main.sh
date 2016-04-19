@@ -78,7 +78,6 @@ expect {
 }
 
 expect "*]#\ " { send "mkdir -p /opt/zabbix\r"}
-expect "*]#\ " { send "mkdir -p /opt/zabbix/instances\r"}
 expect "*]#\ " { send "mkdir -p /tmp\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/compute_ping.sh /opt/zabbix\r"}
 expect "*]#\ " { send "\\\\cp -f /tmp/ceph-status.sh /opt/zabbix\r"}
