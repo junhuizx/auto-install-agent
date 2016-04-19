@@ -42,7 +42,7 @@ function instance_disk_write(){
     values=0
     for disk in ${disks[@]}
     do
-        value=`$virsh domblkstat $1 $disk | awk '/rd_bytes/{print $3}'`
+        value=`$virsh domblkstat $1 $disk | awk '/wr_bytes/{print $3}'`
         values=`expr $values + $value`
     done
     echo $values
@@ -56,7 +56,7 @@ function instance_disk_read(){
     values=0
     for disk in ${disks[@]}
     do
-        value=`$virsh domblkstat $1 $disk | awk '/wr_bytes/{print $3}'`
+        value=`$virsh domblkstat $1 $disk | awk '/rd_bytes/{print $3}'`
         values=`expr $values + $value`
     done
     echo $values
