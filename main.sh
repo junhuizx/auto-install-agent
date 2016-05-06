@@ -131,9 +131,9 @@ expect "*]#\ " {
     send "sed -i '/^Hostname=/s/.*/Hostname=$host/g' /etc/zabbix/zabbix_agentd.conf\r"
 }
 
-expect "*]#\ " {send "echo 'AllowRoot=1' >> /etc/zabbix/zabbix_agentd.conf\r"}
-
-expect "*]#\ " {send "echo 'User=root' >> /etc/zabbix/zabbix_agentd.conf\r"}
+expect "*]#\ " {
+    send "sed -i '/^Timeout=/d' /etc/zabbix/zabbix_agentd.conf\r"
+}
 
 expect "*]#\ " {send "echo 'Timeout=15' >> /etc/zabbix/zabbix_agentd.conf\r"}
 
