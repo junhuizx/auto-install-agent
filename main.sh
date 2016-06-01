@@ -7,7 +7,7 @@ exit 1;
 fi 
 
 Proxy=$1
-Password='RDC'
+Password='<Your Password>'
 
 function find_host()
 {
@@ -162,64 +162,6 @@ expect eof
 EOD
 }
 
-function config_instance_config()
-{
-    sed -i "s/127.0.0.1/$1/g" ./proxy/instance_monitor.conf
-}
-
-function reset_instance_config()
-{
-    sed -i "s/$1/127.0.0.1/g" ./proxy/instance_monitor.conf
-}
-
-function copy_instance_proxy()
-{
-    host=$1
-    IProxy=(`ls ./proxy`)
-    for iproxy in ${IProxy[@]}
-    do
-    expect <<EOD
-set timeout -1
-spawn scp ./proxy/$iproxy root@$host:/tmp
-expect {
-    "yes/no)?\ " {send "yes\r";exp_continue}
-    "*assword:\ " {send "$Password\r"}
-    eof
-}
-
-expect eof
-EOD
-    done
-}
-
-function install_instance_proxy()
-{
-    host=$1
-    expect <<EOD
-spawn ssh root@$host
-expect {
-    "yes/no)?\ " {send "yes\r";exp_continue}
-    "*assword:\ " {send "$Password\r"}
-    "*]#\ " {send "\r"}
-}
-
-expect "*]#\ " {send "rpm -ivh /tmp/python-pip-7.1.0-1.el7.noarch.rpm\r"}
-expect "*]#\ " {send "pip install /tmp/pymongo-3.2.2.tar.gz\r"}
-expect "*]#\ " { send "\r"}
-expect "*]#\ " { send "\r"}
-
-expect "*]#\ " {send "\\\\cp /tmp/instance_monitor.py /lib/python2.7/site-packages/nova/compute/instance_monitor.py\r"}
-expect "*]#\ " {send "\\\\cp /tmp/alarm.py /lib/python2.7/site-packages/nova/compute/alarm.py\r"}
-expect "*]#\ " {send "\\\\cp /tmp/instance_monitor.service /lib/systemd/system/instance_monitor.service\r"}
-expect "*]#\ " {send "\\\\cp /tmp/instance_monitor.conf /etc/instance_monitor.conf\r"}
-
-expect "*]#\ " {send "systemctl enable instance_monitor;systemctl start instance_monitor\r"}
-expect "*]#\ " {send "exit\r"}
-
-expect eof
-EOD
-}
-
 hostsup=(`find_host 1`)
 hostsdown=(`find_host 0`)
 
@@ -247,8 +189,6 @@ while true; do
     esac
 done
 
-config_instance_config $Proxy
-
 for host in ${hostsup[@]}
 do
     echo ''
@@ -265,14 +205,7 @@ do
     # Copy Zabbix Config
     copy_userparameter_and_shell $host
     install_userparameter_and_shell $host
-    
-    echo 'Install and Configure Instance Proxy'
-    # Install Instance Proxy
-    # copy_instance_proxy $host
-    # install_instance_proxy $host
 
     echo "End Installtion On $host"
 
 done
-
-reset_instance_config $Proxy
